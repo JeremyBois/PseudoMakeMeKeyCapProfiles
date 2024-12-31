@@ -24,7 +24,8 @@ use <list-comprehension/skin.scad>
 Choc = 0;
 MX = 1;
 Null =2;
-spru = true;
+spru = false;
+crossBool=false;
 
 //// override Z-butt param
 //lp_key = [
@@ -41,25 +42,30 @@ spru = true;
 /*Tester */
 
 
-crossBool=false;
+// // Stem == MX
+// for(i = [0:2]){
+//   translate([-32,     0 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 4, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([-16,     0 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 2, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([0,       0 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 0, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([48 - 32, 0 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 4, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([48 - 16, 0 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 2, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([48 -  0, 0 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 0, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+// }
 
-for(i = [0:2]){
-  translate([-32,     0 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 4, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([-16,     0 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 2, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([0,       0 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 0, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([48 - 32, 0 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 4, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([48 - 16, 0 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 2, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([48 -  0, 0 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 0, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
-}
+// Stem == Choc
+// for(i = [0:2]){
+//   translate([-32,     60 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 4, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([-16,     60 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 2, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([0,       60 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 0, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([48 - 32, 60 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 4, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([48 - 16, 60 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 2, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+//   translate([48 -  0, 60 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 0, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+// }
 
-for(i = [0:2]){
-  translate([-32,     60 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 4, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([-16,     60 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 2, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([0,       60 - 16 * i, 0]) keycap(keyID = 3 * i, heightAdjust = 0, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([48 - 32, 60 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 4, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([48 - 16, 60 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 2, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
-  translate([48 -  0, 60 - 16 * i, 0]) keycap(keyID = 3 * i + 9, heightAdjust = 0, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
-}
+// Single keycap
+// keycap(keyID = 3 * i, heightAdjust = 0, Stem = MX, crossSection = crossBool, Sym = true,  homeDot = false);
+keycap(keyID = 3, heightAdjust = 0, Stem = Choc, crossSection = crossBool, Sym = true,  homeDot = false);
+
 
 // spru
 if (spru) {
