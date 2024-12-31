@@ -521,7 +521,7 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false
         }else {
           skin([for (i=[0:layers])
             transform(translation(CapTranslation(i, keyID+2)) * rotation(CapRotation(i, keyID+2)),
-             elliptical_rectangle(CapBottomTransform(i,.5, keyID+2), b  = CapRoundness(i,keyID+2),fn=fn),)]); //outer shell
+             elliptical_rectangle(CapBottomTransform(i,.5, keyID+2), b  = CapRoundness(i,keyID+2),fn=fn))]); //outer shell
           }
         //Cut inner shell
 //      }
