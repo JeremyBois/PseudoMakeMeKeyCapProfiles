@@ -1,6 +1,8 @@
 # Pseudo Make Me Key Cap Profile
 
 ## What the fork
+### JeremyBois
+* Fix compilation errors and warnings (based on @wolfwood fork)
 
 * scripts to generate CS, DES, and Liminal Chimera keycaps
 * sprued stls packs for MJF/SLS printing
