@@ -3,9 +3,10 @@ use <scad-utils/morphology.scad> //for cheaper minwoski
 use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad> use <scad-utils/trajectory_path.scad>
-use <sweep.scad>
-use <skin.scad>
+use <list-comprehension/sweep.scad>
+use <list-comprehension/skin.scad>
 //use <z-butt.scad>
+
 /*TODOS
  0. iterative design basis ? param to swing?
     a. dish depth

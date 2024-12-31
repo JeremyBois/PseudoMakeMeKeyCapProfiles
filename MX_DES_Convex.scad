@@ -3,8 +3,8 @@ use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad>
 use <scad-utils/trajectory_path.scad>
-use <sweep.scad>
-use <skin.scad>
+use <list-comprehension/sweep.scad>
+use <list-comprehension/skin.scad>
 
 /*DES (Distorted Elliptical Saddle) Sculpted Profile
 Version 2: Eliptical Rectangle

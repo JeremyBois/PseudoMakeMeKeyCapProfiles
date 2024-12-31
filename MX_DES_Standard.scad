@@ -3,8 +3,8 @@ use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad>
 use <scad-utils/trajectory_path.scad>
-use <sweep.scad>
-use <skin.scad>
+use <list-comprehension/sweep.scad>
+use <list-comprehension/skin.scad>
 //use <z-butt.scad>
 
 /*DES (Distorted Elliptical Saddle) Sculpted Profile for 6x3 and corne thumb

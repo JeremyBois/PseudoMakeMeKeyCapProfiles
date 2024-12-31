@@ -3,9 +3,10 @@ use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad>
 use <scad-utils/trajectory_path.scad>
-use <sweep.scad>
-use <skin.scad>  
-use <z-butt.scad>
+use <list-comprehension/sweep.scad>
+use <list-comprehension/skin.scad>
+// use <z-butt.scad>
+
 //TODOs 
 //add shell towards bottom to make it rounder
 //add o-ring portion 
