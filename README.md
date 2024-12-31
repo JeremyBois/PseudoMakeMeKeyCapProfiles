@@ -2,6 +2,7 @@
 
 ## What the fork
 ### JeremyBois
+* Add thumb version of Liminal Chimera keycaps (based on @wolfwood fork)
 * Fix compilation errors and warnings (based on @wolfwood and @zzeneg forks)
 
 * scripts to generate CS, DES, and Liminal Chimera keycaps
