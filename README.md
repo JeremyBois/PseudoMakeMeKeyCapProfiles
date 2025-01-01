@@ -6,6 +6,10 @@
 * Fix compilation errors and warnings (based on @wolfwood and @zzeneg forks)
 
 
+* [ ] Fix the models to sit flush on the XY plane
+  - see https://github.com/pseudoku/PseudoMakeMeKeyCapProfiles/pull/6
+  - see https://github.com/wolfwood/PseudoMakeMeKeyCapProfiles/commit/b18ece5e47a5e7940903dd9f585aab9daf49278b
+
 ### Zzneg
 * Add KS33 support for MX_DES variant
 
