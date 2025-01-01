@@ -26,13 +26,20 @@ keycap(
 
 //#translate([0,38,13])cube([18-5.7, 18-5.7,1],center = true);
 //Parameters
-wallthickness = 2.0; // 1.5 for norm, 1.25 for cast master
-topthickness  = 3;   // 3 for norm, 2.5 for cast master
+
+// The lower the lower the keycap (lower versions are required for both Choc V2 and Gateron KS33)
+// heightShift = 0;     // Pseudoku variant
+// heightShift = -1.5;   // Zzeneg variant (required for KS33)
+heightShift = -2.5;   // Dohn-joh variant
+
+wallthickness = 1.6; // 1.5 for norm, 1.25 for cast master
+topthickness  = 3.4;   // 3 for norm, 2.5 for cast master
 stepsize      = 60;  //resolution of Trajectory
 step          = 0.5;   //resolution of ellipes
 fn            = 60;  //resolution of Rounded Rectangles: 60 for output
 layers        = 50;  //resolution of vertical Sweep: 50 for output
 dotRadius     = 0.55;   //home dot size; default 0.55
+
 //---Stem param
 Tol    = 0.00;
 stemRot = 0;
@@ -40,7 +47,7 @@ stemWid = 7.55;
 stemLen = 5.55 ;
 stemCrossHeight = 4;
 extra_vertical  = 0.6;
-StemBrimDep     = 1;
+StemBrimDep     = -1;
 stemLayers      = 50; //resolution of stem to cap top transition
 
 keyParameters = //keyParameters[KeyID][ParameterID]
@@ -48,8 +55,7 @@ keyParameters = //keyParameters[KeyID][ParameterID]
 //  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft  XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
 //Column high sculpt 3 row system
     //0~5
-     [17.16,  17.16,   6.5, 	 6.5,10.55,    0,    0,     9,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R4 8
-//    [17.16,  17.16,   6.5, 	 6.5, 10.0,    0,    0,    15,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R4 8
+    [17.16,  17.16,   6.5, 	 6.5,10.55,    0,    0,     9,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R4 8
     [17.16,  17.16,   6.5, 	 6.5, 8.75,    0,   .5,     4,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 Home
     [17.16,  17.16,   6.5, 	 6.5, 9.75,    0,    0,   -13,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R2
     [17.16,  17.16,   6.5, 	 6.5, 8.75,    0,    0,     4,     0,     0,   2,   2,      1,      5,      1,    3.5,     2,       2], //R3 deepdish
@@ -190,7 +196,7 @@ function BottomWidth(keyID)  = keyParameters[keyID][0];  //
 function BottomLength(keyID) = keyParameters[keyID][1];  //
 function TopWidthDiff(keyID) = keyParameters[keyID][2];  //
 function TopLenDiff(keyID)   = keyParameters[keyID][3];  //
-function KeyHeight(keyID)    = keyParameters[keyID][4];  //
+function KeyHeight(keyID)    = keyParameters[keyID][4] + heightShift;  //
 function TopWidShift(keyID)  = keyParameters[keyID][5];
 function TopLenShift(keyID)  = keyParameters[keyID][6];
 function XAngleSkew(keyID)   = keyParameters[keyID][7];
@@ -247,16 +253,21 @@ function CapTranslation(t, keyID) =
 
 function InnerTranslation(t, keyID) =
   [
-    ((1-t)/layers*TopWidShift(keyID)),   //X shift
-    ((1-t)/layers*TopLenShift(keyID)),   //Y shift
+    // MX
+    // ((1-t)/layers*TopWidShift(keyID)),   //X shift
+    // ((1-t)/layers*TopLenShift(keyID)),   //Y shift
+    // (t/layers*(KeyHeight(keyID)-topthickness))    //Z shift
+    // MX and KS33
+    0,   //X shift
+    ((1-t)/layers*-0.25),   //Y shift
     (t/layers*(KeyHeight(keyID)-topthickness))    //Z shift
   ];
 
-function CapRotation(t, keyID) =
+function CapRotation(t, keyID, isInner=false) =
   [
     ((1-t)/layers*XAngleSkew(keyID)),   //X shift
     ((1-t)/layers*YAngleSkew(keyID)),   //Y shift
-    ((1-t)/layers*ZAngleSkew(keyID))    //Z shift
+    ((1-t)/layers*(isInner ? 0 : ZAngleSkew(keyID)))    //Z shift (MX and KS33)
   ];
 
 function CapTransform(t, keyID) =
@@ -264,6 +275,7 @@ function CapTransform(t, keyID) =
     pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopWidthDiff(keyID)) + (1-pow(t/layers, WidExponent(keyID)))*BottomWidth(keyID),
     pow(t/layers, LenExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)) + (1-pow(t/layers, LenExponent(keyID)))*BottomLength(keyID)
   ];
+
 function CapRoundness(t, keyID) =
   [
     pow(t/layers, ChamExponent(keyID))*(CapRound0f(keyID)) + (1-pow(t/layers, ChamExponent(keyID)))*CapRound0i(keyID),
@@ -274,8 +286,8 @@ function CapRadius(t, keyID) = pow(t/layers, ChamExponent(keyID))*ChamfFinRad(ke
 
 function InnerTransform(t, keyID) =
   [
-    pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/layers, WidExponent(keyID)))*(BottomWidth(keyID) -wallthickness*2),
-    pow(t/layers, LenExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/layers, LenExponent(keyID)))*(BottomLength(keyID)-wallthickness*2)
+    pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)+wallthickness) + (1-pow(t/layers, WidExponent(keyID)))*(BottomWidth(keyID) -wallthickness*2),
+    pow(t/layers, LenExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)+wallthickness) + (1-pow(t/layers, LenExponent(keyID)))*(BottomLength(keyID)-wallthickness*2)
   ];
 
 function StemTranslation(t, keyID) =
@@ -335,7 +347,7 @@ module keycap(
 
         //Cut inner shell
         if(Stem == true){
-          translate([0,0,-.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(InnerTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
+          translate([0,0,-.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID, true)), elliptical_rectangle(InnerTransform(i, keyID), fn=fn))]);
         }
       }
       if(Stem == true){
@@ -427,10 +439,10 @@ module keycap(
 //------------------stems
 
 MXWid = 4.03/2+Tol; //horizontal lenght
-MXLen = 4.23/2+Tol; //vertical length
+MXLen = 4.03/2+Tol; //vertical length (MX and KS33)
 
-MXWidT = 1.15/2+Tol; //horizontal thickness
-MXLenT = 1.25/2+Tol; //vertical thickness
+MXWidT = 1.10/2+Tol; //horizontal thickness (MX and KS33)
+MXLenT = 1.23/2+Tol; //vertical thickness (MX and KS33)
 
 function stem_internal(sc=1) = sc*[
 [MXLenT, MXLen],[MXLenT, MXWidT],[MXWid, MXWidT],

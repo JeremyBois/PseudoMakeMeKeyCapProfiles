@@ -5,6 +5,11 @@
 * Add thumb version of Liminal Chimera keycaps (based on @wolfwood fork)
 * Fix compilation errors and warnings (based on @wolfwood and @zzeneg forks)
 
+
+### Zzneg
+* Add KS33 support for MX_DES variant
+
+### Sporkus
 * scripts to generate CS, DES, and Liminal Chimera keycaps
 * sprued stls packs for MJF/SLS printing
 * adding 1.25 to 2.25u Choc CS regular and convex caps
