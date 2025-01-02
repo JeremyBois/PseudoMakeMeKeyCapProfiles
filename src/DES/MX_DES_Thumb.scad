@@ -7,8 +7,8 @@ use <scad-utils/trajectory_path.scad>
 use <list-comprehension/sweep.scad>
 use <list-comprehension/skin.scad>
 
-use <utils/shape.scad>
-use <utils/stem.scad>
+use <../Common/shape.scad>
+use <../Common/stem.scad>
 
 /*DES (Distorted Elliptical Saddle) Sculpted Profile for 6x3 and corne thumb
 Version 2: Eliptical Rectangle

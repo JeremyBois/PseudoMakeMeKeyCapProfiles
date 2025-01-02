@@ -9,8 +9,8 @@ use <list-comprehension/skin.scad>
 
 //use <z-butt.scad>
 
-use <utils/shape.scad>
-use <utils/stem.scad>
+use <../Common/shape.scad>
+use <../Common/stem.scad>
 
 //NOTE: with sweep cuts, top surface may not be visible in review, it should be visible once rendered
 
@@ -19,7 +19,7 @@ mirror([0,0,0])keycap(
   cutLen = 0, //Don't change. for chopped caps
   stem   = true, //tusn on shell and stems
   stemRot = stemRot,//change stem orientation by deg
-  homeDot = true, //turn on homedots
+  homeDot = false, //turn on homedots
   dish   = true, //turn on dish cut
   visualizeDish = false,  // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
@@ -304,6 +304,7 @@ module keycap(
   // Homing
   if(homeDot == true)
   {
+    // @WIP
     translate([0,0,KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(r = dotRadius);
   }
 }

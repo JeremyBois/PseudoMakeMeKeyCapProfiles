@@ -9,8 +9,8 @@ use <list-comprehension/skin.scad>
 
 //use <z-butt.scad>
 
-use <utils/shape.scad>
-use <utils/stem.scad>
+use <../Common/shape.scad>
+use <../Common/stem.scad>
 
 // Choc Chord version Chicago Stenographer with sculpte Thumb cluster
 

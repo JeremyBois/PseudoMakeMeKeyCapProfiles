@@ -610,41 +610,41 @@ function StemTrajectory() =
     trajectory(forward = 4.25)  //You can add more traj if you wish
   ];
 
-  StemPath  = quantize_trajectories(StemTrajectory(),  steps = 1 , loop=false, start_position= $t*4);
-  StemCurve  = [ for(i=[0:len(StemPath)-1])  transform(StemPath[i],  stem_internal()) ];
+StemPath  = quantize_trajectories(StemTrajectory(),  steps = 1 , loop=false, start_position= $t*4);
+StemCurve  = [ for(i=[0:len(StemPath)-1])  transform(StemPath[i],  stem_internal()) ];
 
 function StemTrajectory2() =
   [
     trajectory(forward = .5)  //You can add more traj if you wish
   ];
 
-  StemPath2  = quantize_trajectories(StemTrajectory2(),  steps = 10, loop=false, start_position= $t*4);
-  StemCurve2  = [ for(i=[0:len(StemPath2)-1])  transform(StemPath2[i]*scaling([(1.1-.1*i/(len(StemPath2)-1)),(1.1-.1*i/(len(StemPath2)-1)),1]),  stem_internal()) ];
+StemPath2  = quantize_trajectories(StemTrajectory2(),  steps = 10, loop=false, start_position= $t*4);
+StemCurve2  = [ for(i=[0:len(StemPath2)-1])  transform(StemPath2[i]*scaling([(1.1-.1*i/(len(StemPath2)-1)),(1.1-.1*i/(len(StemPath2)-1)),1]),  stem_internal()) ];
 
 
-module choc_stem(draftAng = 5) {
-  stemHeight = 3.1;
-  dia = .15;
-  wids = 1.16/2;
-  lens = 1.45;
-  module Stem() {
-    difference(){
-      translate([0,0,-stemHeight/2])linear_extrude(height = stemHeight)hull(){
-        translate([wids-dia,-lens])circle(d=dia);
-        translate([-wids+dia,-lens])circle(d=dia);
-        translate([wids-dia,  lens])circle(d=dia);
-        translate([-wids+dia, lens])circle(d=dia);
-      }
+// module choc_stem(draftAng = 5) {
+//   stemHeight = 3.1;
+//   dia = .15;
+//   wids = 1.16/2;
+//   lens = 1.45;
+//   module Stem() {
+//     difference(){
+//       translate([0,0,-stemHeight/2])linear_extrude(height = stemHeight)hull(){
+//         translate([wids-dia,-lens])circle(d=dia);
+//         translate([-wids+dia,-lens])circle(d=dia);
+//         translate([wids-dia,  lens])circle(d=dia);
+//         translate([-wids+dia, lens])circle(d=dia);
+//       }
 
-    //cuts
-      translate([3.9,0])cylinder(d1=7+sin(draftAng)*stemHeight, d2=7,3.5, center = true, $fn = 64);
-      translate([-3.9,0])cylinder(d1=7+sin(draftAng)*stemHeight,d2=7,3.5, center = true, $fn = 64);
-    }
-  }
+//     //cuts
+//       translate([3.9,0])cylinder(d1=7+sin(draftAng)*stemHeight, d2=7,3.5, center = true, $fn = 64);
+//       translate([-3.9,0])cylinder(d1=7+sin(draftAng)*stemHeight,d2=7,3.5, center = true, $fn = 64);
+//     }
+//   }
 
-  translate([5.7/2,0,-stemHeight/2+2])Stem();
-  translate([-5.7/2,0,-stemHeight/2+2])Stem();
-}
+//   translate([5.7/2,0,-stemHeight/2+2])Stem();
+//   translate([-5.7/2,0,-stemHeight/2+2])Stem();
+// }
 
 /// ----- helper functions
 function rounded_rectangle_profile(size=[1,1],r=1,fn=32) = [
