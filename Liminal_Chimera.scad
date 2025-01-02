@@ -459,7 +459,7 @@ function BackTanTransition(t, keyID) = (1-pow(t/stepsize, BackTanArcExpo(keyID) 
 
 
 ///----- KEY Builder Module
-module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, SecondaryDish = false, Stem = false, homeDot = false, Stab = 0, Legends = false, Sym = false, Rotation = 0,  heightAdjust =0) {
+module keycap(keyID = 0, cutLen = 0, visualizeDish = false, crossSection = false, Dish = true, SecondaryDish = false, Stem = MX, homeDot = false, Stab = 0, Legends = false, Sym = false, Rotation = 0,  heightAdjust =0) {
 
   //Set Parameters for dish shape
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false, start_position= $t*4);
