@@ -11,6 +11,7 @@ use <list-comprehension/skin.scad>
 
 use <../Common/shape.scad>
 use <../Common/stem.scad>
+use <../Common/logging.scad>
 
 //Choc Chord version Chicago Stenographer
 
@@ -42,9 +43,9 @@ slop    = 0.3;
 stemRot = 0;
 stemWid = 8;
 stemLen = 6;
-stemCrossHeight = 1.8;
-extra_vertical = 0.6;
-stemBrimDep     = 0;
+stemOriginZ = 1.7;
+// stemOriginZ = 1.7;
+stemTopShift = 0;
 stemLayers = 50; //resolution of stem to cap top transition
 stemDriftAngle = 0; //degrees
 //#cube([18.16, 18.16, 10], center = true); // sanity check border
@@ -210,9 +211,10 @@ function InnerTransform(t, keyID) =
 
 function StemTranslation(t, keyID) =
   [
-    ((1-t)/stemLayers*TopWidShift(keyID)),   //X shift
-    ((1-t)/stemLayers*TopLenShift(keyID)),   //Y shift
-    stemCrossHeight+.1 + (t/stemLayers*(KeyHeight(keyID)- topthickness - stemCrossHeight-.1))    //Z shift
+    ((1-t)/stemLayers*TopWidShift(keyID)),   // X shift
+    ((1-t)/stemLayers*TopLenShift(keyID)),   // Y shift
+    // Distance between innerTop and stemTop to force a connection between stems and cap
+    stemOriginZ + (t/stemLayers * (KeyHeight(keyID) - topthickness - stemOriginZ))    // Z shift
   ];
 
 function StemRotation(t, keyID) =
@@ -241,7 +243,8 @@ module keycap(
   dish = true,
   visualizeDish = false,
   crossSection = false,
-  legends = false
+  legends = false,
+  verbose = false,
 ) {
   $fn = fn;
 
@@ -273,10 +276,62 @@ module keycap(
       }
 
       if(stem == true){
-        translate([0,0,stemBrimDep]) rotate([0,0,stemRot]) Choc_Stem(driftAngle = stemDriftAngle);
+        // Avoid reversed brim that will shorten the stem height
+        stemToInnerTopHeight = StemTranslation(stemLayers, keyID)[2] - StemTranslation(0, keyID)[2];
+        assert(stemToInnerTopHeight > 0.0, str("Inner top surface is lower than stem Z origin, stemToInnerTopHeight = ", str(stemToInnerTopHeight)));
 
-        // Transition Support for taller profile (from inner top cap to stem base)
+        // Brim Support for taller profile (link cap and stem)
+        brimTop = transform(translation(StemTranslation(stemLayers, keyID)) * rotation(StemRotation(stemLayers, keyID)), [[0, 0, 0]]);
+        brimBottom = transform(translation(StemTranslation(0, keyID)) * rotation(StemRotation(0, keyID)), [[0, 0, 0]]);
+        innerTopToStemTop = abs(brimTop[0][2]-brimBottom[0][2]);
+
+        // Slope on roll and pitch
+        shapeSize = StemTransform(stemLayers, keyID);
+        rollSlopeZ = abs(shapeSize[1] / 2.0 * sin(XAngleSkew(keyID)));
+        pitchSlopeZ = abs(shapeSize[0] / 2.0 * sin(YAngleSkew(keyID)));
+        slopeMaxZ = max(rollSlopeZ, pitchSlopeZ);
+        maxAbsAngle = slopeMaxZ == rollSlopeZ ? XAngleSkew(keyID) : YAngleSkew(keyID);
+
+        // Avoid degenerate shape
+        slopeBottomToStemTop = innerTopToStemTop - slopeMaxZ;
+        angleRatio = maxAbsAngle > 0 ? slopeMaxZ / maxAbsAngle : 1.0;
+        heightRatio = layers > 0 ? slopeBottomToStemTop / layers : 1.0;
+        assert(slopeBottomToStemTop > 0.0, str("Brim too low due to angle (roll or pitch), slopeBottomToStemTop = ", str(slopeBottomToStemTop)));
+
+        // Draw Stem
+        translate([0,0,stemTopShift])rotate([0,0,stemRot]) Choc_Stem(driftAngle = stemDriftAngle, originZ=stemOriginZ);
+
+        // Draw brim
+        if (heightRatio < 0.02) {
+          echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Available height too small for good looking slope.");
+          adjustedSteps = [0, stemLayers];
+          rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=adjustedSteps) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+        }
+        else if (angleRatio < 0.06) {
+          echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Angle too step for available height.");
+          adjustedSteps = [0, stemLayers];
+          rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=adjustedSteps) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+        }
+        else {
           rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=[0:stemLayers]) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+        }
+
+        // Debug helper
+        if (verbose) {
+          echo_info(str("shapeSize: ", shapeSize));
+          echo_info(str("roll: ", XAngleSkew(keyID)));
+          echo_info(str("pitch: ", YAngleSkew(keyID)));
+          echo_info(str("maxAbsAngle: ", maxAbsAngle));
+          echo_info(str("rollSlopeZ: ", rollSlopeZ));
+          echo_info(str("pitchSlopeZ: ", pitchSlopeZ));
+          echo_info(str("slopeMaxZ: ", slopeMaxZ));
+          echo_info(str("brimTop: ", brimTop));
+          echo_info(str("brimBottom: ", brimBottom));
+          echo_info(str("innerTopToStemTop / available: ", innerTopToStemTop));
+          echo_info(str("slopeBottomToStemTop: ", slopeBottomToStemTop));
+          echo_info(str("angleRatio: ", angleRatio));
+          echo_info(str("heightRatio: ", heightRatio));
+        }
       }
     }
 

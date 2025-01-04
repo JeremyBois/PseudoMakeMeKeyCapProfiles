@@ -12,8 +12,9 @@ use <key.scad>
 /**
  * Choc stem (two flat legs).
  */
-module Choc_Stem(driftAngle = 5) {
-  stemHeight = 3.1;
+module Choc_Stem(driftAngle = 5, originZ) {
+  // Add 0.1 to make sure cap cannot bottom out
+  stemHeight = 3.0 + 0.1;
   dia = .15;
   rad = dia / 2;
   wids = 1.1 / 2;
@@ -36,9 +37,8 @@ module Choc_Stem(driftAngle = 5) {
                                       d2 = 7, 3.5, center = true, $fn = 64);
     }
   }
-
-  translate([ 5.7 / 2, 0, -stemHeight / 2 + 2 ]) _Stem();
-  translate([ -5.7 / 2, 0, -stemHeight / 2 + 2 ]) _Stem();
+  translate([ 5.7 / 2, 0, -stemHeight / 2 + originZ ]) _Stem();
+  translate([ -5.7 / 2, 0, -stemHeight / 2 + originZ ]) _Stem();
 }
 
 /** MX stem (cross shape) with a cylinderical body.
