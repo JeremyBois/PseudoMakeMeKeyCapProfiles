@@ -251,11 +251,11 @@ module keycap(
     union(){
       difference(){
         // Create outer shell
-        skin([for (i=[0:layers-1]) transform(translation(CapTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle_profile(CapTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
+        skin([for (i=[0:layers]) transform(translation(CapTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle_profile(CapTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
 
         // Cut inner shell
         if(stem == true){
-          translate([0,0,-.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle_profile(InnerTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
+          translate([0,0,-.001])skin([for (i=[0:layers]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle_profile(InnerTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
         }
 
         // Make sure XY plane is flat
@@ -271,7 +271,7 @@ module keycap(
         // }
 
         // Transition Support for taller profile (from inner top cap to stem base)
-        rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID),r=StemRadius(i, keyID), fn=fn))]);
+        rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=[0:stemLayers]) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID),r=StemRadius(i, keyID), fn=fn))]);
       }
     }
 
