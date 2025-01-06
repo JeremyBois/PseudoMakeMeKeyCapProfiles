@@ -15,6 +15,9 @@ use <../Common/logging.scad>
 
 //Choc Chord version Chicago Stenographer
 
+// Global overloadable epsilon at different scope
+$eps = 1/80;
+
 /*Tester */
 keycap(
   keyID  = 6, //change profile refer to KeyParameters Struct
@@ -214,7 +217,8 @@ function StemTranslation(t, keyID) =
     ((1-t)/stemLayers*TopWidShift(keyID)),   // X shift
     ((1-t)/stemLayers*TopLenShift(keyID)),   // Y shift
     // Distance between innerTop and stemTop to force a connection between stems and cap
-    stemOriginZ + (t/stemLayers * (KeyHeight(keyID) - topthickness - stemOriginZ))    // Z shift
+    // Use of $eps to make sure they merge (hint for union)
+    stemOriginZ - $eps + (t/stemLayers * (KeyHeight(keyID) - topthickness - stemOriginZ + $eps*2.0))    // Z shift
   ];
 
 function StemRotation(t, keyID) =

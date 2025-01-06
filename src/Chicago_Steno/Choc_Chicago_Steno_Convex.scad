@@ -12,6 +12,9 @@ use <list-comprehension/skin.scad>
 use <../Common/shape.scad>
 use <../Common/stem.scad>
 
+// Global overloadable epsilon at different scope
+$eps = 1/80;
+
 //NOTE: with sweep cuts, top surface may not be visible in review, it should be visible once rendered
 
 mirror([0,0,0])keycap(
@@ -41,8 +44,7 @@ slop    = 0.3;
 stemRot = 0;
 stemWid = 8;
 stemLen = 6;
-stemCrossHeight = 1.8;
-extra_vertical  = 0.6;
+stemOriginZ = 1.7;
 stemBrimDep     = 0;
 stemLayers      = 50; //resolution of stem to cap top transition
 stemDriftAngle  = 0;  // degrees
@@ -202,7 +204,9 @@ function StemTranslation(t, keyID) =
   [
     ((1-t)/stemLayers*TopWidShift(keyID)),   //X shift
     ((1-t)/stemLayers*TopLenShift(keyID)),   //Y shift
-     stemCrossHeight+.1 + (t/stemLayers*(KeyHeight(keyID)- topthickness - stemCrossHeight-.1))   //Z shift
+    // Distance between innerTop and stemTop to force a connection between stems and cap
+    // Use of $eps to make sure they merge (hint for union)
+    stemOriginZ - $eps + (t/stemLayers * (KeyHeight(keyID) - topthickness - stemOriginZ + $eps*2.0))    // Z shift
   ];
 
 function StemRotation(t, keyID) =
