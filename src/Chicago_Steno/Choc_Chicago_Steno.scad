@@ -20,21 +20,37 @@ $eps = 1/80;
 
 /*Tester */
 keycap(
-  keyID  = 6, //change profile refer to KeyParameters Struct
+  // keyID  = 20, //change profile refer to KeyParameters Struct
+  keyID  = 21, //change profile refer to KeyParameters Struct
   cutLen = 0, //Don't change. for chopped caps
   stem   = true, //tusn on shell and stems
   stemRot = stemRot, //change stem orientation by deg
-  homeDot = true, //turn on homedots,
+  homeDot = false, //turn on homedots,
   homeBar = false, //turn on homebar,
   dish   = true, //turn on dish cut
   visualizeDish = false, // turn on debug visual of Dish
   crossSection  = false, // center cut to check internal
-  legends = false
+  legends = false,
+  verbose = false
   );
+
+// translate([0, 20, 0]) keycap(
+//   keyID  = 25, //change profile refer to KeyParameters Struct
+//   cutLen = 0, //Don't change. for chopped caps
+//   stem   = true, //tusn on shell and stems
+//   stemRot = stemRot, //change stem orientation by deg
+//   homeDot = false, //turn on homedots,
+//   homeBar = false, //turn on homebar,
+//   dish   = true, //turn on dish cut
+//   visualizeDish = false, // turn on debug visual of Dish
+//   crossSection  = false, // center cut to check internal
+//   legends = false
+//   );
 
 // ----- Parameters
 wallthickness = 1.1; // 1.75 for mx size, 1.1
-topthickness = 3.0;  // 2 for phat 3 for chicago
+topthickness = 2.8;  // 2 for phat 3 for chicago
+// topthickness = 4;  // 2 for phat 3 for chicago
 stepsize = 60;       // resolution of Trajectory
 step = 0.5;          // resolution of ellipes
 fn = 60;             // resolution of Rounded Rectangles: 60 for output
@@ -58,7 +74,7 @@ stemDriftAngle = 0; //degrees
 
 keyParameters = //keyParameters[KeyID][ParameterID]
 [
-//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft  XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
+//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
     //Column 0
     //Levee: Chicago in choc Dimension
     [17.20,  16.00,   5.6, 	   5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2/R4
@@ -82,16 +98,35 @@ keyParameters = //keyParameters[KeyID][ParameterID]
     //2.25: [13, 14]
     [39.70,  15.60,   5.6, 	   5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,     .1,      2,      .1,      3,     2,       2], //Chicago Steno R2/R4 1.5
     [39.70,  15.60,   5.6, 	   5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,     .1,      3,      .1,      3,     2,       2], //Chicago Steno R3 1.5u
-    // Ergo shits
+    // Ergo shits [15, 18]
     [18.75,  18.75,   5.6, 	   5,    8,    0,   .25,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //highpro 19.05 R2|4
     [17.20,  16.00,   5.6, 	   5,  4.7,    0,   .0,      3,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2 ALT
     [17.20,  16.00,   5.6, 	   5,  5.5,    0,   .0,      7,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R1 Steap
-    [17.20,  16.00,   5.6, 	   5,  7.0,    0,   .0,     10,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2] //Chicago Steno R1 mild with alt R2
+    [17.20,  16.00,   5.6, 	   5,  7.0,    0,   .0,     10,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R1 mild with alt R2
+
+
+    //
+    // Custom
+    //
+    // BotWid, BotLen,  TWDif,TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
+
+    // Tests [19, 20]
+    [30,  15.00,   5.6,     5,  10,    0,   .0,     50,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
+    [30,  15.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
+
+    // Choc spacing [21, 23]
+    [17.20,  16.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2/R4
+    [17.20,  16.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
+    [17.20,  16.00,  1.25,  1.25,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,     .5,     .10,     .5,     2,       2], //Chicago Steno R3 chord
+
+    // MX spacing [24, 25]
+    [18.00,  18.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2/R4
+    [18.00,  18.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
 ];
 
 dishParameters = //dishParameter[keyID][ParameterID]
 [
-//FFwd1 FFwd2 FPit1 FPit2  DshDep DshHDif FArcIn FArcFn FArcEx     BFwd1 BFwd2 BPit1 BPit2  BArcIn BArcFn BArcEx
+// FFwd1 FFwd2 FPit1 FPit2  DshDep DshHDif FArcIn FArcFn FArcEx     BFwd1 BFwd2 BPit1 BPit2  BArcIn BArcFn BArcEx
   //Column 0
   [ 4.5,    4,    7,  -50,      7,    1.7,   11.5,    17.5,     2,      4.5,    4,    2,   -35,   11.5,  15,     2], //Chicago Steno R2/R4
   [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 flat
@@ -118,7 +153,25 @@ dishParameters = //dishParameter[keyID][ParameterID]
   [   5,    5,    5,  -40,      7,    1.7,   11,    15,     2,        5,    5,    5,   -40,   11,    15,     2], //Chicago Steno R3 flat
   [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], //Chicago Steno R1
   [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], //Chicago Steno R1
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2] //Chicago Steno R1
+  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], //Chicago Steno R1
+
+  //
+  // Custom
+  //
+  // FFwd1 FFwd2 FPit1 FPit2  DshDep DshHDif FArcIn FArcFn FArcEx     BFwd1 BFwd2 BPit1 BPit2  BArcIn BArcFn BArcEx
+
+  // Tests
+  [ 10,    8,    7,  -40,      7,    1.7,   15,    22,     2,      10,    8,    5,   -40,   15,    22,     2],
+  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2],
+
+  // Choc spacing
+  [ 4.5,    4,    7,  -50,      7,    1.7,   11.5,    17.5,     2,      4.5,    4,    2,   -35,   11.5,  15,     2], //Chicago Steno R2/R4
+  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 flat
+  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 chord
+
+  // MX spacing
+  [ 5.5,    4.1,  7,  -50,      7,    1.7,   13,    16.5,     2,      5.5,    4.1,    2,   -35,   13,  16.5,     2], //Chicago Steno R2/R4
+  [ 5.5,    4.1,  5,  -50,      7,    1.7,   13,    16.5,     2,      5.5,    4.1,    2,   -40,   13,  16.5,     2], //Chicago Steno R2/R4
 ];
 
 
