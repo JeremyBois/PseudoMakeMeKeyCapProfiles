@@ -115,63 +115,79 @@ keyParameters = //keyParameters[KeyID][ParameterID]
     [30,  15.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
 
     // Choc spacing [21, 23]
-    [17.20,  16.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2/R4
-    [17.20,  16.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
-    [17.20,  16.00,  1.25,  1.25,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,     .5,     .10,     .5,     2,       2], //Chicago Steno R3 chord
+    [17.20,  16.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1], //Chicago Steno R2/R4
+    [17.20,  16.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       1], //Chicago Steno R3 flat
+    [17.20,  16.00,  1.25,  1.25,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,     .5,     .10,     .5,     2,       2], //Chicago Steno R3 chord (@TODO)
 
     // MX spacing [24, 25]
-    [18.00,  18.00,   5.6,     5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2/R4
-    [18.00,  18.00,   5.6,     5,  4.5,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
+    // v8
+    [18.00,  18.00,   6.1,     6.3,  5.0,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1], //Chicago Steno R2/R4
+    [18.00,  18.00,   6.1,     6.3,  4.6,    0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       1], //Chicago Steno R3 flat
 ];
 
+
+// Dish is built using two sub-dishes: Center to Front (F) and Center to Back (B)
+// Each sub-dish follow a trajectory built with two sub-trajectories (more can be added if needed ...)
+//      FRONT                BACK
+// DishDepth     [0] - DishDepth     [0] : Dish size on the Z axis
+// DishHeightDif [1] - DishHeightDif [1] : Dish Z position shift relative to key height (0 means dish bottom just touch the key top)
+// FrontForward1 [2] - BackForward1  [9] : Dish first trajectory forward/backward distance (Y axis)
+// FrontForward2 [3] - BackForward2 [10] : Dish second trajectory forward/backward distance (Y axis)
+// FrontPitch1   [4] - BackPitch1   [11] : Dish first trajectory rotation/-rotation (pitch, rotation around X axis)
+// FrontPitch2   [5] - BackPitch2   [12] : Dish second trajectory rotation/-rotation (pitch, rotation around X axis)
+// FrontInitArc  [6] - BackInitArc  [13] : Dish Initial size (X axis) (key front)
+// FrontFinArc   [7] - BackFinArc   [14] : Dish Final size (X axis) (key center)
+// FrontArcExpo  [8] - BackArcExpo  [15] : Dish curvature exponent (control X curvature from init to end arc)
 dishParameters = //dishParameter[keyID][ParameterID]
 [
-// FFwd1 FFwd2 FPit1 FPit2  DshDep DshHDif FArcIn FArcFn FArcEx     BFwd1 BFwd2 BPit1 BPit2  BArcIn BArcFn BArcEx
-  //Column 0
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11.5,    17.5,     2,      4.5,    4,    2,   -35,   11.5,  15,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 flat
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 chord
+  //
+  // Default
+  //
+  // 1U
+  [ 7,   1.7,       4.5,   4.0,   7,  -50,   11.5,   17.5,   2,       4.5,   4.0,   2,   -35,   11.5,   15.0,   2], //Chicago Steno R2/R4
+  [ 7,   1.7,       4.5,   4.0,   5,  -40,   11.5,   15.0,   2,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2], //Chicago Steno R3 flat
+  [ 7,   1.7,       4.5,   4.0,   5,  -40,   11.5,   15.0,   2,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2], //Chicago Steno R3 chord
+  [ 5,   1.0,       6.0,   3.5,   7,  -50,   16.0,   23.0,   2,       6.0,   3.5,   7,   -50,   16.0,   23.0,   2], //Levee Steno R2/R4
+  [ 5,   1.0,       6.0,   3.5,   7,  -50,   16.0,   23.0,   2,       6.0,   3.5,   7,   -50,   16.0,   23.0,   2], //Levee Steno R2/R4
+  // 1.25U
+  [ 8,   1.7,       4.5,   4.0,   7,  -40,   16.0,   22.5,   2,       4.5,   4.0,   2,   -35,   16.0,   19.5,   2], //Chicago Steno R2/R4
+  [ 8,   1.7,       4.5,   4.0,   5,  -40,   16.0,   19.5,   2,       4.5,   4.0,   5,   -40,   16.0,   19.5,   2], //Chicago Steno R3
+  // 1.5U
+  [ 8,   1.7,       4.5,   4.0,   7,  -40,   20.5,   26.5,   2,       4.5,   4.0,   2,   -35,   20.5,   24.0,   2], //Chicago Steno R2/R4
+  [ 8,   1.7,       4.5,   4.0,   5,  -40,   20.5,   24.0,   2,       4.5,   4.0,   5,   -40,   20.5,   24.0,   2], //Chicago Steno R3
+  // 1.75U
+  [ 8,   1.7,       4.5,   4.0,   7,  -40,   25.0,   31.0,   2,       4.5,   4.0,   2,   -35,   25.0,   28.5,   2], //Chicago Steno R2/R4
+  [ 8,   1.7,       4.5,   4.0,   5,  -40,   25.0,   28.5,   2,       4.5,   4.0,   5,   -40,   25.0,   28.5,   2], //Chicago Steno R3
+  // 2.00U
+  [ 8,   1.7,       4.5,   4.0,   7,  -40,   29.5,   35.5,   2,       4.5,   4.0,   2,   -35,   29.5,   33.0,   2], //Chicago Steno R2/R4
+  [ 8,   1.7,       4.5,   4.0,   5,  -40,   29.5,   33.0,   2,       4.5,   4.0,   5,   -40,   29.5,   33.0,   2], //Chicago Steno R3
+  // 2.25U
+  [ 8,   1.7,       4.5,   4.0,   7,  -40,   33.0,   39.0,   2,       4.5,   4.0,   2,   -35,   33.0,   36.5,   2], //Chicago Steno R2/R4
+  [ 8,   1.7,       4.5,   4.0,   5,  -40,   33.0,   36.5,   2,       4.5,   4.0,   5,   -40,   33.0,   36.5,   2], //Chicago Steno R3
 
-  [   6,  3.5,    7,  -50,      5,    1.0,   16,    23,     2,        6,  3.5,    7,   -50,   16,    23,     2], //Levee Steno R2/R4
-  [   6,  3.5,    7,  -50,      5,    1.0,   16,    23,     2,        6,  3.5,    7,   -50,   16,    23,     2], //Levee Steno R2/R4
-  //1.25
-  [ 4.5,    4,    7,  -40,      8,    1.7,   16.0,  22.5,     2,      4.5,    4,    2,   -35,   16.0,  19.5,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.7,   16.0,  19.5,     2,      4.5,    4,    5,   -40,   16.0,  19.5,     2], //Chicago Steno R3
-  //1.5
-  [ 4.5,    4,    7,  -40,      8,    1.7,   20.5,  26.5,     2,      4.5,    4,    2,   -35,   20.5,  24.0,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.7,   20.5,  24.0,     2,      4.5,    4,    5,   -40,   20.5,  24.0,     2], //Chicago Steno R3
-  //1.75
-  [ 4.5,    4,    7,  -40,      8,    1.7,   25.0,  31.0,     2,      4.5,    4,    2,   -35,   25.0,  28.5,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.7,   25.0,  28.5,     2,      4.5,    4,    5,   -40,   25.0,  28.5,     2], //Chicago Steno R3
-  //2.00
-  [ 4.5,    4,    7,  -40,      8,    1.7,   29.5,  35.5,     2,      4.5,    4,    2,   -35,   29.5,  33.0,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.7,   29.5,  33.0,     2,      4.5,    4,    5,   -40,   29.5,  33.0,     2], //Chicago Steno R3
-  //2.25
-  [ 4.5,    4,    7,  -40,      8,    1.7,   33.0,  39.0,     2,      4.5,    4,    2,   -35,   33.0,  36.5,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      8,    1.7,   33.0,  36.5,     2,      4.5,    4,    5,   -40,   33.0,  36.5,     2], //Chicago Steno R3
-
-  [   5,    5,    5,  -40,      7,    1.7,   11,    15,     2,        5,    5,    5,   -40,   11,    15,     2], //Chicago Steno R3 flat
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], //Chicago Steno R1
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], //Chicago Steno R1
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11,    17,     2,      4.5,    4,    2,   -35,   11,    15,     2], //Chicago Steno R1
+  [ 7,   1.7,       5.0,   5.0,   5,  -40,   11.0,   15.0,   2,       5.0,   5.0,   5,   -40,   11.0,   15.0,   2], //Chicago Steno R3 flat
+  [ 7,   1.7,       4.5,   4.0,   7,  -50,   11.0,   17.0,   2,       4.5,   4.0,   2,   -35,   11.0,   15.0,   2], //Chicago Steno R1
+  [ 7,   1.7,       4.5,   4.0,   7,  -50,   11.0,   17.0,   2,       4.5,   4.0,   2,   -35,   11.0,   15.0,   2], //Chicago Steno R1
+  [ 7,   1.7,       4.5,   4.0,   7,  -50,   11.0,   17.0,   2,       4.5,   4.0,   2,   -35,   11.0,   15.0,   2], //Chicago Steno R1
 
   //
   // Custom
   //
-  // FFwd1 FFwd2 FPit1 FPit2  DshDep DshHDif FArcIn FArcFn FArcEx     BFwd1 BFwd2 BPit1 BPit2  BArcIn BArcFn BArcEx
-
   // Tests
-  [ 10,    8,    7,  -40,      7,    1.7,   15,    22,     2,      10,    8,    5,   -40,   15,    22,     2],
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2],
+  [ 7,   1.7,       10.,   8.0,   7,   -40,   15.0,   22.0,   2,       10.0,  8.0,   5,   -40,   15.0,   22.0,   2],
+  [ 7,   1.7,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2],
 
   // Choc spacing
-  [ 4.5,    4,    7,  -50,      7,    1.7,   11.5,    17.5,     2,      4.5,    4,    2,   -35,   11.5,  15,     2], //Chicago Steno R2/R4
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 flat
-  [ 4.5,    4,    5,  -40,      7,    1.7,   11.5,    15,     2,      4.5,    4,    5,   -40,   11.5,    15,     2], //Chicago Steno R3 chord
+  // 1U
+  [ 7,   1.7,       4.5,   4.0,   7,   -50,   11.5,   17.5,   2,       4.5,   4.0,   2,   -35,   11.5,   15.0,   2], //Chicago Steno R2/R4
+  [ 7,   1.7,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2], //Chicago Steno R3 flat
+  [ 7,   1.7,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2,       4.5,   4.0,   5,   -40,   11.5,   15.0,   2], //Chicago Steno R3 chord
 
   // MX spacing
-  [ 5.5,    4.1,  7,  -50,      7,    1.7,   13,    16.5,     2,      5.5,    4.1,    2,   -35,   13,  16.5,     2], //Chicago Steno R2/R4
-  [ 5.5,    4.1,  5,  -50,      7,    1.7,   13,    16.5,     2,      5.5,    4.1,    2,   -40,   13,  16.5,     2], //Chicago Steno R2/R4
+  // 1U
+  // v8
+  [ 8,   1.85,      4.8,   4.5,  10,   -45,   12.0,   17.5,   2,       4.8,   4.5,   5,   -30,   12.0,   17.0,   2], //Chicago Steno R2/R4
+  [ 8,   1.85,      4.8,   4.5,   7,   -45,   12.0,   17.0,   2,       4.8,   4.5,   7,   -45,   12.0,   17.0,   2], //Chicago Steno R3
 ];
 
 
@@ -194,12 +210,12 @@ function CapRound1f(keyID)   = keyParameters[keyID][15];
 function ChamExponent(keyID) = keyParameters[keyID][16];
 function StemExponent(keyID) = keyParameters[keyID][17];
 
-function FrontForward1(keyID) = dishParameters[keyID][0];  //
-function FrontForward2(keyID) = dishParameters[keyID][1];  //
-function FrontPitch1(keyID)   = dishParameters[keyID][2];  //
-function FrontPitch2(keyID)   = dishParameters[keyID][3];  //
-function DishDepth(keyID)     = dishParameters[keyID][4];  //
-function DishHeightDif(keyID) = dishParameters[keyID][5];  //
+function DishDepth(keyID)     = dishParameters[keyID][0];  //
+function DishHeightDif(keyID) = dishParameters[keyID][1];  //
+function FrontForward1(keyID) = dishParameters[keyID][2];  //
+function FrontForward2(keyID) = dishParameters[keyID][3];  //
+function FrontPitch1(keyID)   = dishParameters[keyID][4];  //
+function FrontPitch2(keyID)   = dishParameters[keyID][5];  //
 function FrontInitArc(keyID)  = dishParameters[keyID][6];
 function FrontFinArc(keyID)   = dishParameters[keyID][7];
 function FrontArcExpo(keyID)  = dishParameters[keyID][8];
@@ -213,8 +229,8 @@ function BackArcExpo(keyID)   = dishParameters[keyID][15];
 
 function FrontTrajectory(keyID) =
   [
-    trajectory(forward = FrontForward1(keyID), pitch =  FrontPitch1(keyID)), //more param available: yaw, roll, scale
-    trajectory(forward = FrontForward2(keyID), pitch =  FrontPitch2(keyID))  //You can add more traj if you wish
+    trajectory(forward = FrontForward1(keyID), pitch =  FrontPitch1(keyID)),
+    trajectory(forward = FrontForward2(keyID), pitch =  FrontPitch2(keyID))
   ];
 
 function BackTrajectory (keyID) =
