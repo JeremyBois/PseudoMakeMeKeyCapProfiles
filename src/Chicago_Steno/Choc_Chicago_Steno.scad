@@ -18,13 +18,30 @@ use <../Common/logging.scad>
 // Global overloadable epsilon at different scope
 $eps = 1/80;
 
-/*Tester */
+//
+// Testers
+//
+
+// translate([-19, 0, 0])keycap(
+//   keyID  = 28, //change profile refer to KeyParameters Struct
+//   cutLen = 0, //Don't change. for chopped caps
+//   stem   = false, // Turn on inner shell, brim and stems
+//   stemRot = 0, //change stem orientation by deg
+//   homeDot = false, //turn on homedots,
+//   homeBar = false, //turn on homebar,
+//   dish   = true, //turn on dish cut
+//   visualizeDish = false, // turn on debug visual of Dish
+//   crossSection  = false, // center cut to check internal
+//   legends = false,
+//   verbose = false
+//   );
+// translate([-19, 0, 10]) cube(size = [1, 1, 1], center = true);
+
 keycap(
-  // keyID  = 20, //change profile refer to KeyParameters Struct
-  keyID  = 21, //change profile refer to KeyParameters Struct
+  keyID  = 25, //change profile refer to KeyParameters Struct
   cutLen = 0, //Don't change. for chopped caps
-  stem   = true, //tusn on shell and stems
-  stemRot = stemRot, //change stem orientation by deg
+  stem   = true, // Turn on inner shell, brim and stems
+  stemRot = 0, //change stem orientation by deg
   homeDot = false, //turn on homedots,
   homeBar = false, //turn on homebar,
   dish   = true, //turn on dish cut
@@ -34,47 +51,43 @@ keycap(
   verbose = false
   );
 
-// translate([0, 20, 0]) keycap(
-//   keyID  = 25, //change profile refer to KeyParameters Struct
+// translate([19, 0, 0]) keycap(
+//   keyID  = 26, //change profile refer to KeyParameters Struct
 //   cutLen = 0, //Don't change. for chopped caps
-//   stem   = true, //tusn on shell and stems
-//   stemRot = stemRot, //change stem orientation by deg
+//   stem   = false, // Turn on inner shell, brim and stems
+//   stemRot = 0, //change stem orientation by deg
 //   homeDot = false, //turn on homedots,
 //   homeBar = false, //turn on homebar,
 //   dish   = true, //turn on dish cut
 //   visualizeDish = false, // turn on debug visual of Dish
 //   crossSection  = false, // center cut to check internal
-//   legends = false
+//   legends = false,
+//   verbose = false
 //   );
 
-// ----- Parameters
-wallthickness = 1.1; // 1.75 for mx size, 1.1
-topthickness = 2.8;  // 2 for phat 3 for chicago
-// topthickness = 4;  // 2 for phat 3 for chicago
-stepsize = 60;       // resolution of Trajectory
-step = 0.5;          // resolution of ellipes
-fn = 60;             // resolution of Rounded Rectangles: 60 for output
-layers = 50;         // resolution of vertical Sweep: 50 for output
-dotRadius = 0.55;
-
-// ----- Stem Parameters
-slop    = 0.3;
-stemRot = 0;
-stemWid = 8;
-stemLen = 6;
-stemOriginZ = 1.7;
-// stemOriginZ = 1.7;
-stemTopShift = 0;
-stemLayers = 50; //resolution of stem to cap top transition
-stemDriftAngle = 0; //degrees
 //#cube([18.16, 18.16, 10], center = true); // sanity check border
 
-//TODO: Add wall thickness transition?
+// ----- Parameters
+wallthickness = 1.1;  // 1.75 (MX) 1.1 (Choc)
+topthickness = 2.8;   // 2.80 (MX) 2.80 (Choc)
+stepsize = 60;        // Resolution of Trajectory
+step = 0.5;           // Resolution of ellipes
+fn = 60;              // Resolution of Rounded Rectangles: 60 for output
+layers = 50;          // Resolution of vertical Sweep: 50 for output
+dotRadius = 0.55;
+
+// ----- Brim and Stem Parameters
+brimEndWidth = 7.5;    // X 7.5
+brimEndLength = 5.5;   // Y 5.5
+brimEndHeight = 1.7;   // Z 1.7
+brimlayers = 50;       // Resolution of brim to transition from cap to stem
+stemDriftAngle = 0;    // Drift in legs holes
 
 
 keyParameters = //keyParameters[KeyID][ParameterID]
 [
-//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
+    // BrimEx : Control the curve exponent when extruding the brim to transition from inner cap to stem top
+//  BotWid, BotLen, TWDif, TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, BrimEx
     //Column 0
     //Levee: Chicago in choc Dimension
     [17.20,  16.00,   5.6, 	   5,  4.9,    0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       2], //Chicago Steno R2/R4
@@ -108,7 +121,7 @@ keyParameters = //keyParameters[KeyID][ParameterID]
     //
     // Custom
     //
-    // BotWid, BotLen,  TWDif,TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, StemEx
+    // BotWid, BotLen,  TWDif,TLDif, keyh, WSft, LSft, XSkew, YSkew, ZSkew, WEx, LEx, CapR0i, CapR0f, CapR1i, CapR1f, CapREx, BrimEx
 
     // Tests [19, 20]
     [30,  15.00,   5.6,     5,  10,    0,   .0,     50,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       2], //Chicago Steno R3 flat
@@ -191,11 +204,11 @@ dishParameters = //dishParameter[keyID][ParameterID]
 ];
 
 
-function BottomWidth(keyID)  = keyParameters[keyID][0];  //
-function BottomLength(keyID) = keyParameters[keyID][1];  //
-function TopWidthDiff(keyID) = keyParameters[keyID][2];  //
-function TopLenDiff(keyID)   = keyParameters[keyID][3];  //
-function KeyHeight(keyID)    = keyParameters[keyID][4];  //
+function BottomWidth(keyID)  = keyParameters[keyID][0];
+function BottomLength(keyID) = keyParameters[keyID][1];
+function TopWidthDiff(keyID) = keyParameters[keyID][2];
+function TopLenDiff(keyID)   = keyParameters[keyID][3];
+function KeyHeight(keyID)    = keyParameters[keyID][4];
 function TopWidShift(keyID)  = keyParameters[keyID][5];
 function TopLenShift(keyID)  = keyParameters[keyID][6];
 function XAngleSkew(keyID)   = keyParameters[keyID][7];
@@ -208,21 +221,21 @@ function CapRound0f(keyID)   = keyParameters[keyID][13];
 function CapRound1i(keyID)   = keyParameters[keyID][14];
 function CapRound1f(keyID)   = keyParameters[keyID][15];
 function ChamExponent(keyID) = keyParameters[keyID][16];
-function StemExponent(keyID) = keyParameters[keyID][17];
+function BrimExponent(keyID) = keyParameters[keyID][17];
 
-function DishDepth(keyID)     = dishParameters[keyID][0];  //
-function DishHeightDif(keyID) = dishParameters[keyID][1];  //
-function FrontForward1(keyID) = dishParameters[keyID][2];  //
-function FrontForward2(keyID) = dishParameters[keyID][3];  //
-function FrontPitch1(keyID)   = dishParameters[keyID][4];  //
-function FrontPitch2(keyID)   = dishParameters[keyID][5];  //
+function DishDepth(keyID)     = dishParameters[keyID][0];
+function DishHeightDif(keyID) = dishParameters[keyID][1];
+function FrontForward1(keyID) = dishParameters[keyID][2];
+function FrontForward2(keyID) = dishParameters[keyID][3];
+function FrontPitch1(keyID)   = dishParameters[keyID][4];
+function FrontPitch2(keyID)   = dishParameters[keyID][5];
 function FrontInitArc(keyID)  = dishParameters[keyID][6];
 function FrontFinArc(keyID)   = dishParameters[keyID][7];
 function FrontArcExpo(keyID)  = dishParameters[keyID][8];
-function BackForward1(keyID)  = dishParameters[keyID][9];  //
-function BackForward2(keyID)  = dishParameters[keyID][10];  //
-function BackPitch1(keyID)    = dishParameters[keyID][11];  //
-function BackPitch2(keyID)    = dishParameters[keyID][12];  //
+function BackForward1(keyID)  = dishParameters[keyID][9];
+function BackForward2(keyID)  = dishParameters[keyID][10];
+function BackPitch1(keyID)    = dishParameters[keyID][11];
+function BackPitch2(keyID)    = dishParameters[keyID][12];
 function BackInitArc(keyID)   = dishParameters[keyID][13];
 function BackFinArc(keyID)    = dishParameters[keyID][14];
 function BackArcExpo(keyID)   = dishParameters[keyID][15];
@@ -243,23 +256,23 @@ function BackTrajectory (keyID) =
 //--------------Function definng Cap
 function CapTranslation(t, keyID) =
   [
-    ((1-t)/layers*TopWidShift(keyID)),   //X shift
-    ((1-t)/layers*TopLenShift(keyID)),   //Y shift
-    (t/layers*KeyHeight(keyID))    //Z shift
+    ((1-t)/layers*TopWidShift(keyID)), // X shift
+    ((1-t)/layers*TopLenShift(keyID)), // Y shift
+    (t/layers*KeyHeight(keyID))        // Z shift
   ];
 
 function InnerTranslation(t, keyID) =
   [
-    ((1-t)/layers*TopWidShift(keyID)),   //X shift
-    ((1-t)/layers*TopLenShift(keyID)),   //Y shift
-    (t/layers*(KeyHeight(keyID)-topthickness))    //Z shift
+    ((1-t)/layers*TopWidShift(keyID)),         // X shift
+    ((1-t)/layers*TopLenShift(keyID)),         // Y shift
+    (t/layers*(KeyHeight(keyID)-topthickness)) // Z shift
   ];
 
 function CapRotation(t, keyID) =
   [
-    ((1-t)/layers*XAngleSkew(keyID)),   //X shift
-    ((1-t)/layers*YAngleSkew(keyID)),   //Y shift
-    ((1-t)/layers*ZAngleSkew(keyID))    //Z shift
+    ((1-t)/layers*XAngleSkew(keyID)), // X shift
+    ((1-t)/layers*YAngleSkew(keyID)), // Y shift
+    ((1-t)/layers*ZAngleSkew(keyID))  // Z shift
   ];
 
 function CapTransform(t, keyID) =
@@ -267,6 +280,7 @@ function CapTransform(t, keyID) =
     pow(t/layers, WidExponent(keyID))*(BottomWidth(keyID) -TopWidthDiff(keyID)) + (1-pow(t/layers, WidExponent(keyID)))*BottomWidth(keyID) ,
     pow(t/layers, LenExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)) + (1-pow(t/layers, LenExponent(keyID)))*BottomLength(keyID)
   ];
+
 function CapRoundness(t, keyID) =
   [
     pow(t/layers, ChamExponent(keyID))*(CapRound0f(keyID)) + (1-pow(t/layers, ChamExponent(keyID)))*CapRound0i(keyID),
@@ -283,27 +297,27 @@ function InnerTransform(t, keyID) =
 
 function StemTranslation(t, keyID) =
   [
-    ((1-t)/stemLayers*TopWidShift(keyID)),   // X shift
-    ((1-t)/stemLayers*TopLenShift(keyID)),   // Y shift
+    ((1-t)/brimlayers*TopWidShift(keyID)),   // X shift
+    ((1-t)/brimlayers*TopLenShift(keyID)),   // Y shift
     // Distance between innerTop and stemTop to force a connection between stems and cap
     // Use of $eps to make sure they merge (hint for union)
-    stemOriginZ - $eps + (t/stemLayers * (KeyHeight(keyID) - topthickness - stemOriginZ + $eps*2.0))    // Z shift
+    brimEndHeight - $eps + (t/brimlayers * (KeyHeight(keyID) - topthickness - brimEndHeight + $eps*2.0))    // Z shift
   ];
 
 function StemRotation(t, keyID) =
   [
-    ((1-t)/stemLayers*XAngleSkew(keyID)),   //X shift
-    ((1-t)/stemLayers*YAngleSkew(keyID)),   //Y shift
-    ((1-t)/stemLayers*ZAngleSkew(keyID))    //Z shift
+    ((1-t)/brimlayers*XAngleSkew(keyID)),   // X shift
+    ((1-t)/brimlayers*YAngleSkew(keyID)),   // Y shift
+    ((1-t)/brimlayers*ZAngleSkew(keyID))    // Z shift
   ];
 
 function StemTransform(t, keyID) =
   [
-    pow(t/stemLayers, StemExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/stemLayers, StemExponent(keyID)))*(stemWid - 2*slop),
-    pow(t/stemLayers, StemExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/stemLayers, StemExponent(keyID)))*(stemLen - 2*slop)
+    pow(t/brimlayers, BrimExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/brimlayers, BrimExponent(keyID)))*brimEndWidth,
+    pow(t/brimlayers, BrimExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/brimlayers, BrimExponent(keyID)))*brimEndLength
   ];
 
-function StemRadius(t, keyID) = pow(t/stemLayers,3)*3 + (1-pow(t/stemLayers, 3))*1;
+function StemRadius(t, keyID) = pow(t/brimlayers,3)*3 + (1-pow(t/brimlayers, 3))*1;
 
 ///----- KEY Builder Module
 module keycap(
@@ -325,8 +339,8 @@ module keycap(
   FrontPath = quantize_trajectories(FrontTrajectory(keyID), steps = stepsize, loop=false);
   BackPath  = quantize_trajectories(BackTrajectory(keyID),  steps = stepsize, loop=false);
 
-  // Scaling initial and final dim tranformation by exponents
-  function FrontDishArc(t) =  pow((t)/(len(FrontPath)),FrontArcExpo(keyID))*FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)),FrontArcExpo(keyID)))*FrontInitArc(keyID);
+  // Use exponent to control the curvature (shrinkage) from init to final sub-trajectories
+  function FrontDishArc(t) = pow((t) / (len(FrontPath)), FrontArcExpo(keyID)) * FrontFinArc(keyID) + (1-pow(t/(len(FrontPath)), FrontArcExpo(keyID)))*FrontInitArc(keyID);
   function BackDishArc(t)  =  pow((t)/(len(FrontPath)),BackArcExpo(keyID))*BackFinArc(keyID) + (1-pow(t/(len(FrontPath)),BackArcExpo(keyID)))*BackInitArc(keyID);
 
   // Force normals to be on the same side for both forward and backward directions
@@ -351,47 +365,49 @@ module keycap(
 
       if(stem == true){
         // Avoid reversed brim that will shorten the stem height
-        stemToInnerTopHeight = StemTranslation(stemLayers, keyID)[2] - StemTranslation(0, keyID)[2];
-        assert(stemToInnerTopHeight > 0.0, str("Inner top surface is lower than stem Z origin, stemToInnerTopHeight = ", str(stemToInnerTopHeight)));
-
-        // Brim Support for taller profile (link cap and stem)
-        brimTop = transform(translation(StemTranslation(stemLayers, keyID)) * rotation(StemRotation(stemLayers, keyID)), [[0, 0, 0]]);
+        brimTop = transform(translation(StemTranslation(brimlayers, keyID)) * rotation(StemRotation(brimlayers, keyID)), [[0, 0, 0]]);
         brimBottom = transform(translation(StemTranslation(0, keyID)) * rotation(StemRotation(0, keyID)), [[0, 0, 0]]);
-        innerTopToStemTop = abs(brimTop[0][2]-brimBottom[0][2]);
+        innerTopToStemTop = brimTop[0][2]-brimBottom[0][2];
+        assert(innerTopToStemTop > 0.0, str("Inner top surface is lower than stem Z origin, innerTopToStemTop = ", str(innerTopToStemTop)));
 
-        // Slope on roll and pitch
-        shapeSize = StemTransform(stemLayers, keyID);
+        // Avoid degenerate brim that will shorten the stem height or/and flip some faces
+        shapeSize = StemTransform(brimlayers, keyID);
         rollSlopeZ = abs(shapeSize[1] / 2.0 * sin(XAngleSkew(keyID)));
         pitchSlopeZ = abs(shapeSize[0] / 2.0 * sin(YAngleSkew(keyID)));
         slopeMaxZ = max(rollSlopeZ, pitchSlopeZ);
-        maxAbsAngle = slopeMaxZ == rollSlopeZ ? XAngleSkew(keyID) : YAngleSkew(keyID);
-
-        // Avoid degenerate shape
         slopeBottomToStemTop = innerTopToStemTop - slopeMaxZ;
-        angleRatio = maxAbsAngle > 0 ? slopeMaxZ / maxAbsAngle : 1.0;
-        heightRatio = layers > 0 ? slopeBottomToStemTop / layers : 1.0;
         assert(slopeBottomToStemTop > 0.0, str("Brim too low due to angle (roll or pitch), slopeBottomToStemTop = ", str(slopeBottomToStemTop)));
 
         // Draw Stem
-        translate([0,0,stemTopShift])rotate([0,0,stemRot]) Choc_Stem(driftAngle = stemDriftAngle, originZ=stemOriginZ);
+        rotate([0,0,stemRot]) Choc_Stem(driftAngle = stemDriftAngle, originZ=brimEndHeight);
 
-        // Draw brim
-        if (heightRatio < 0.02) {
-          echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Available height too small for good looking slope.");
-          adjustedSteps = [0, stemLayers];
-          rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=adjustedSteps) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
-        }
-        else if (angleRatio < 0.06) {
-          echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Angle too step for available height.");
-          adjustedSteps = [0, stemLayers];
-          rotate([0,0,stemRot]) translate([0,0,-.001]) skin([for (i=adjustedSteps) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+        // Draw Brim (link cap and stem)
+        layerHeight = layers > 0 ? innerTopToStemTop / layers : 1.0;
+        maxAbsAngle = slopeMaxZ == rollSlopeZ ? XAngleSkew(keyID) : YAngleSkew(keyID);
+        layerAngle = maxAbsAngle > 0 ? slopeMaxZ / maxAbsAngle : 1.0;
+        if (BrimExponent(keyID) > 1) {
+          if (layerHeight < 0.01) {
+            echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Available height too small for good looking slope.");
+            echo_info(str("layerHeight: ", layerHeight));
+            adjustedSteps = [0, brimlayers];
+            rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+          }
+          else if (layerAngle < 0.05) {
+            echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Angle too step for available height.");
+            echo_info(str("layerAngle: ", layerAngle));
+            adjustedSteps = [0, brimlayers];
+            rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+          }
+          else {
+            rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=[0:brimlayers]) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
+          }
         }
         else {
           rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=[0:brimlayers]) transform(translation(StemTranslation(i, keyID)) * rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID), r=StemRadius(i, keyID), fn=fn))]);
         }
 
         // Debug helper
-        if (verbose) {
+        if (verbose == true) {
           echo_info(str("shapeSize: ", shapeSize));
           echo_info(str("roll: ", XAngleSkew(keyID)));
           echo_info(str("pitch: ", YAngleSkew(keyID)));
@@ -403,8 +419,8 @@ module keycap(
           echo_info(str("brimBottom: ", brimBottom));
           echo_info(str("innerTopToStemTop / available: ", innerTopToStemTop));
           echo_info(str("slopeBottomToStemTop: ", slopeBottomToStemTop));
-          echo_info(str("angleRatio: ", angleRatio));
-          echo_info(str("heightRatio: ", heightRatio));
+          echo_info(str("layerAngle: ", layerAngle));
+          echo_info(str("layerHeight: ", layerHeight));
         }
       }
     }
