@@ -344,8 +344,8 @@ module keycap(
   function BackDishArc(t)  =  pow((t)/(len(FrontPath)),BackArcExpo(keyID))*BackFinArc(keyID) + (1-pow(t/(len(FrontPath)),BackArcExpo(keyID)))*BackInitArc(keyID);
 
   // Force normals to be on the same side for both forward and backward directions
-  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShapeConcave(DishDepth(keyID), FrontDishArc(i), 1, d = 0, step=step)) ];
-  BackCurve  = [ for(i=[len(BackPath)-1:-1:0])  transform(BackPath[i],  DishShapeConcave(DishDepth(keyID),  BackDishArc(i), 1, d = 0, step=step)) ];
+  FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShapeConcave(DishDepth(keyID), FrontDishArc(i), d = 0, step=step)) ];
+  BackCurve  = [ for(i=[len(BackPath)-1:-1:0])  transform(BackPath[i],  DishShapeConcave(DishDepth(keyID),  BackDishArc(i), d = 0, step=step)) ];
 
   // Builds
   difference(){
