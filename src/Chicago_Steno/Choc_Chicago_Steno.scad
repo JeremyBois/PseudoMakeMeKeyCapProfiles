@@ -49,6 +49,7 @@ keycap(
   crossSection  = false, // center cut to check internal
   legends = false,
   verbose = false
+  // , tag = str("8")
   );
 
 // translate([19, 0, 0]) keycap(
@@ -62,7 +63,8 @@ keycap(
 //   visualizeDish = false, // turn on debug visual of Dish
 //   crossSection  = false, // center cut to check internal
 //   legends = false,
-//   verbose = false
+//   verbose = false,
+//   tag = str("8")
 //   );
 
 //#cube([18.16, 18.16, 10], center = true); // sanity check border
@@ -332,6 +334,7 @@ module keycap(
   crossSection = false,
   legends = false,
   verbose = false,
+  tag = "",
 ) {
   $fn = fn;
 
@@ -434,6 +437,14 @@ module keycap(
     // Fonts
     if(legends ==  true){
       #rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([-1,-5,KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
+    }
+
+    // Tag / Version (negative version, could affect the top surface when thickness is small)
+    if(tag != ""){
+      tagheight = 0.1;
+      translate(StemTranslation(0, keyID) + [0, 0, -$eps]) rotate(StemRotation(0, keyID)) {
+          linear_extrude(height = tagheight)rotate([0, 180, 0])text( text = tag, font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
+      }
     }
 
     // Dish Shape
