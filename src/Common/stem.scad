@@ -12,9 +12,9 @@ use <key.scad>
 /**
  * Choc stem (two flat legs).
  */
-module Choc_Stem(driftAngle = 5, originZ) {
-  // Add 0.1 to make sure cap cannot bottom out
-  stemHeight = 3.0 + 0.1;
+module Choc_Stem(originZ, margin=0.1, driftAngle = 5) {
+  // Add some margin to make sure cap cannot bottom out
+  stemHeight = 3.0 + margin;
   dia = .15;
   rad = dia / 2;
   wids = 1.1 / 2;
