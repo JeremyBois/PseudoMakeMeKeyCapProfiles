@@ -37,9 +37,10 @@ function DishShapeConcave2(a, b, phi = 200, theta, r, step) = concat(
 );
 
 function DishShapeConvex(a, b, c, d, step) = concat(
-    [[c + a, -b]],
-    Ellipse(a, b, d = 0, rot1 = 270, rot2 = 450, step = step),
-    [[c + a, b]]
+    // Clockwise order to avoid reversed normals
+    [[c + a, b]],
+    Ellipse(a, b, d = d, rot1 = 270+180, rot2 = 90+180, step = -step),
+    [[c + a, -b]]
 );
 
 function rounded_rectangle_profile(size = [ 1, 1 ], r = 1, fn = 32) =
