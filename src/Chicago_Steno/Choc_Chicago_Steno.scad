@@ -11,6 +11,7 @@ use <list-comprehension/skin.scad>
 
 use <../Common/shape.scad>
 use <../Common/stem.scad>
+use <../Common/key.scad>
 use <../Common/logging.scad>
 
 //Choc Chord version Chicago Stenographer
@@ -103,6 +104,12 @@ brimLayers     = 50;    // Resolution of brim to transition from cap to stem
 stemHeight     = 1.7;   // Z 1.7 < 2.0 (5.8 - 3 - 0.8) based on Choc specifications
 stemMargin     = 0.1;   // Allowed stem insertion inside the cap thickness
 stemDriftAngle = 0.0;   // Drift in legs holes
+
+// ----- Debug free space below the keycap
+Choc_KeyFreeSpace(1.4, 1.4, 3.0 + stemMargin, stemHeight);  // Current case
+
+
+
 
 keyParameters = //keyParameters[KeyID][ParameterID]
 [
