@@ -82,7 +82,7 @@ homeRadius    = 0.55;
 // ----- Stem Parameters
 brimEndWidth   = 7.5;   // X 7.5
 brimEndLength  = 5.5;   // Y 5.5
-brimlayers     = 50;    // Resolution of brim to transition from cap to stem
+brimLayers     = 50;    // Resolution of brim to transition from cap to stem
 
 // ----- Stem Parameters
 stemHeight     = 1.7;   // Z 1.7 < 2.0 (5.8 - 3 - 0.8) based on Choc specifications
@@ -304,27 +304,27 @@ function InnerTransform(t, keyID) =
 
 function BrimTranslation(t, keyID) =
   [
-    ((1-t)/brimlayers*TopWidShift(keyID)),   // X shift
-    ((1-t)/brimlayers*TopLenShift(keyID)),   // Y shift
+    ((1-t)/brimLayers*TopWidShift(keyID)),   // X shift
+    ((1-t)/brimLayers*TopLenShift(keyID)),   // Y shift
     // Distance between innerTop and stemTop to force a connection between stems and cap
     // Use of $eps to make sure they merge (hint for union)
-    stemHeight - $eps + (t/brimlayers * (KeyHeight(keyID) - topthickness - stemHeight + $eps*2.0))    // Z shift
+    stemHeight - $eps + (t/brimLayers * (KeyHeight(keyID) - topthickness - stemHeight + $eps*2.0))    // Z shift
   ];
 
 function BrimRotation(t, keyID) =
   [
-    ((1-t)/brimlayers*XAngleSkew(keyID)),   // X shift
-    ((1-t)/brimlayers*YAngleSkew(keyID)),   // Y shift
-    ((1-t)/brimlayers*ZAngleSkew(keyID))    // Z shift
+    ((1-t)/brimLayers*XAngleSkew(keyID)),   // X shift
+    ((1-t)/brimLayers*YAngleSkew(keyID)),   // Y shift
+    ((1-t)/brimLayers*ZAngleSkew(keyID))    // Z shift
   ];
 
 function BrimTransform(t, keyID) =
   [
-    pow(t/brimlayers, BrimExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/brimlayers, BrimExponent(keyID)))*brimEndWidth,
-    pow(t/brimlayers, BrimExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/brimlayers, BrimExponent(keyID)))*brimEndLength
+    pow(t/brimLayers, BrimExponent(keyID))*(BottomWidth(keyID) -TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/brimLayers, BrimExponent(keyID)))*brimEndWidth,
+    pow(t/brimLayers, BrimExponent(keyID))*(BottomLength(keyID)-TopLenDiff(keyID)-wallthickness*2) + (1-pow(t/brimLayers, BrimExponent(keyID)))*brimEndLength
   ];
 
-function BrimRadius(t, keyID) = pow(t/brimlayers,3)*3 + (1-pow(t/brimlayers, 3))*1;
+function BrimRadius(t, keyID) = pow(t/brimLayers,3)*3 + (1-pow(t/brimLayers, 3))*1;
 
 
 ///----- KEY Builder Module
@@ -374,52 +374,65 @@ module keycap(
       }
 
       if(stem == true){
-        // Avoid reversed brim that will shorten the stem height
-        brimTop = transform(translation(BrimTranslation(brimlayers, keyID)) * rotation(BrimRotation(brimlayers, keyID)), [[0, 0, 0]]);
-        brimBottom = transform(translation(BrimTranslation(0, keyID)) * rotation(BrimRotation(0, keyID)), [[0, 0, 0]]);
-        innerTopToStemTop = brimTop[0][2]-brimBottom[0][2];
-        assert(innerTopToStemTop > -stemMargin/2.0, str("Inner top surface is lower than stem Z origin, innerTopToStemTop = ", str(innerTopToStemTop)));
-
-        // Avoid degenerate brim that will shorten the stem height or/and flip some faces
-        shapeSize = BrimTransform(brimlayers, keyID);
-        rollSlopeZ = abs(shapeSize[1] / 2.0 * sin(XAngleSkew(keyID)));
-        pitchSlopeZ = abs(shapeSize[0] / 2.0 * sin(YAngleSkew(keyID)));
-        slopeMaxZ = max(rollSlopeZ, pitchSlopeZ);
-        maxAbsAngle = slopeMaxZ == rollSlopeZ ? XAngleSkew(keyID) : YAngleSkew(keyID);
-        slopeBottomToStemTop = innerTopToStemTop - slopeMaxZ;
-        assert(slopeBottomToStemTop > -stemMargin/2.0, str("Brim too low due to angle (roll or pitch), slopeBottomToStemTop = ", str(slopeBottomToStemTop), ", innerTopToStemTop = ", str(innerTopToStemTop)));
-
         // Draw Stem
         if(visualizeStem == true){
           #rotate([0,0,stemRot]) Choc_Stem(originZ=stemHeight, margin=stemMargin, driftAngle = stemDriftAngle);
         }
         else {
           rotate([0,0,stemRot]) Choc_Stem(originZ=stemHeight, margin=stemMargin, driftAngle = stemDriftAngle);
-          }
+        }
+
+        // Avoid reversed brim that will shorten the stem height or/and flip some faces
+        brimTop = transform(translation(BrimTranslation(brimLayers, keyID)) * rotation(BrimRotation(brimLayers, keyID)), [[0, 0, 0]]);
+        brimBottom = transform(translation(BrimTranslation(0, keyID)) * rotation(BrimRotation(0, keyID)), [[0, 0, 0]]);
+        innerTopToStemTop = brimTop[0][2]-brimBottom[0][2];
+        assert(innerTopToStemTop > -stemMargin/2.0, str("Inner top surface is lower than stem Z origin, innerTopToStemTop = ", str(innerTopToStemTop)));
+
+        // Avoid degenerate brim that will shorten the stem height or/and flip some faces
+        shapeSize = BrimTransform(brimLayers, keyID);
+        rollSlopeZ = abs(shapeSize[1] / 2.0 * sin(XAngleSkew(keyID)));
+        pitchSlopeZ = abs(shapeSize[0] / 2.0 * sin(YAngleSkew(keyID)));
+        slopeMaxZ = max(rollSlopeZ, pitchSlopeZ);
+        maxAbsAngle = slopeMaxZ == rollSlopeZ ? XAngleSkew(keyID) : YAngleSkew(keyID);
+        layerHeight = brimLayers > 0 ? innerTopToStemTop / brimLayers : 1.0;
+        layerAngle = maxAbsAngle > 0 ? slopeMaxZ / maxAbsAngle : 1.0;
 
         // Draw Brim (link cap and stem) if stem not already inside the cap thickness
         if (innerTopToStemTop > 0.0){
-          if (BrimExponent(keyID) > 1) {
-            layerHeight = brimlayers > 0 ? innerTopToStemTop / brimlayers : 1.0;
-            layerAngle = maxAbsAngle > 0 ? slopeMaxZ / maxAbsAngle : 1.0;
-            if (layerHeight < 0.01) {
-              echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Available height too small for good looking slope.");
-              echo_info(str("layerHeight: ", layerHeight));
-              adjustedSteps = [0, brimlayers];
-              rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
-            }
-            else if (layerAngle < 0.05) {
-              echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Angle too step for available height.");
-              echo_info(str("layerAngle: ", layerAngle));
-              adjustedSteps = [0, brimlayers];
-              rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
+          if (stemRot == 0.0) {
+            if (BrimExponent(keyID) > 1) {
+              if (layerHeight < 0.01) {
+                echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Available height too small for good looking slope.");
+                echo_info(str("layerHeight: ", layerHeight));
+                adjustedSteps = [0, brimLayers];
+                translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
+              }
+              else if (layerAngle < 0.05) {
+                echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Angle too step for available height.");
+                echo_info(str("layerAngle: ", layerAngle));
+                adjustedSteps = [0, brimLayers];
+                translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
+              }
+              else {
+                translate([0,0,-$eps]) skin([for (i=[0:brimLayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
+              }
             }
             else {
-              rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=[0:brimlayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
+              translate([0,0,-$eps]) skin([for (i=[0:brimLayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
             }
           }
-          else {
-            rotate([0,0,stemRot]) translate([0,0,-$eps]) skin([for (i=[0:brimlayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
+          else
+          {
+            // Rotation will create a spiral path if lerp over the skinning
+            // Using hull we create the simplest possible shape without any weird distorsions
+            translate([0,0,-$eps]) hull() {
+              translate(BrimTranslation(brimLayers, keyID)) rotate(BrimRotation(brimLayers, keyID)) {
+                linear_extrude(height = $eps, center = true) polygon(rounded_rectangle_profile(BrimTransform(brimLayers, keyID), r=BrimRadius(brimLayers, keyID), fn=fn));
+              }
+              translate(BrimTranslation(0, keyID)) rotate([0, 0, stemRot]) {
+                linear_extrude(height = $eps, center = true) polygon(rounded_rectangle_profile(BrimTransform(0, keyID), r=BrimRadius(0, keyID), fn=fn));
+              }
+            }
           }
         }
 
@@ -434,14 +447,12 @@ module keycap(
           echo_info(str("slopeMaxZ: ", slopeMaxZ));
           echo_info(str("brimTop: ", brimTop));
           echo_info(str("brimBottom: ", brimBottom));
-          echo_info(str("innerTopToStemTop / available: ", innerTopToStemTop));
-          echo_info(str("slopeBottomToStemTop: ", slopeBottomToStemTop));
           echo_info(str("layerAngle: ", is_undef(layerAngle) ? str("Not defined") : layerAngle));
           echo_info(str("layerHeight: ", is_undef(layerHeight) ? str("Not defined") : layerHeight));
         }
       }
       else if(visualizeStem == true){
-          %rotate([0,0,stemRot]) Choc_Stem(originZ=stemHeight, margin=stemMargin, driftAngle = stemDriftAngle);
+        %rotate([0,0,stemRot]) Choc_Stem(originZ=stemHeight, margin=stemMargin, driftAngle = stemDriftAngle);
       }
     }
 
