@@ -469,9 +469,9 @@ module keycap(
 
     // Tag / Version (negative version, could affect the top surface when thickness is small)
     if(tag != ""){
-      tagheight = 0.1;
-      translate(BrimTranslation(0, keyID) + [0, 0, -$eps]) rotate(BrimRotation(0, keyID)) {
-          linear_extrude(height = tagheight)rotate([0, 180, 0])text( text = tag, font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
+      tagheight = 0.15;
+      translate(BrimTranslation(0, keyID) + [0, 0, -2*$eps]) rotate(BrimRotation(0, keyID)) {
+          linear_extrude(height = tagheight+2*$eps)rotate([0, 180, 0])text( text = tag, font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
       }
     }
 
