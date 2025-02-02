@@ -294,16 +294,16 @@ function BackTrajectory (keyID) =
 //--------------Function definng Cap
 function CapTranslation(t, keyID) =
   [
-    ((1-t)/layers*TopWidShift(keyID)), // X shift
-    ((1-t)/layers*TopLenShift(keyID)), // Y shift
+    (-t/layers*TopWidShift(keyID)), // X shift
+    (-t/layers*TopLenShift(keyID)), // Y shift
     (t/layers*KeyHeight(keyID))        // Z shift
   ];
 
 function CapRotation(t, keyID) =
   [
-    ((1-t)/layers*XAngleSkew(keyID)), // X shift
-    ((1-t)/layers*YAngleSkew(keyID)), // Y shift
-    ((1-t)/layers*ZAngleSkew(keyID))  // Z shift
+    (-t/layers*XAngleSkew(keyID)), // X shift
+    (-t/layers*YAngleSkew(keyID)), // Y shift
+    (-t/layers*ZAngleSkew(keyID))  // Z shift
   ];
 
 function CapTransform(t, keyID) =
@@ -323,8 +323,8 @@ function CapRadius(t, keyID) = pow(t/layers, ChamExponent(keyID))*ChamfFinRad(ke
 
 function InnerTranslation(t, keyID) =
   [
-    ((1-t)/layers*TopWidShift(keyID)),         // X shift
-    ((1-t)/layers*TopLenShift(keyID)),         // Y shift
+    (-t/layers*TopWidShift(keyID)),         // X shift
+    (-t/layers*TopLenShift(keyID)),         // Y shift
     (t/layers*(KeyHeight(keyID)-topthickness)) // Z shift
   ];
 
@@ -337,8 +337,8 @@ function InnerTransform(t, keyID) =
 
 function BrimTranslation(t, keyID) =
   [
-    ((1-t)/brimLayers*TopWidShift(keyID)),   // X shift
-    ((1-t)/brimLayers*TopLenShift(keyID)),   // Y shift
+    (-t/brimLayers*TopWidShift(keyID)),   // X shift
+    (-t/brimLayers*TopLenShift(keyID)),   // Y shift
     // Distance between innerTop and stemTop to force a connection between stems and cap
     // Use of $eps to make sure they merge (hint for union)
     stemHeight - $eps + (t/brimLayers * (KeyHeight(keyID) - topthickness - stemHeight + $eps*2.0))    // Z shift
@@ -346,9 +346,9 @@ function BrimTranslation(t, keyID) =
 
 function BrimRotation(t, keyID) =
   [
-    ((1-t)/brimLayers*XAngleSkew(keyID)),   // X shift
-    ((1-t)/brimLayers*YAngleSkew(keyID)),   // Y shift
-    ((1-t)/brimLayers*ZAngleSkew(keyID))    // Z shift
+    (-t/brimLayers*XAngleSkew(keyID)),   // X shift
+    (-t/brimLayers*YAngleSkew(keyID)),   // Y shift
+    (-t/brimLayers*ZAngleSkew(keyID))    // Z shift
   ];
 
 function BrimTransform(t, keyID) =
