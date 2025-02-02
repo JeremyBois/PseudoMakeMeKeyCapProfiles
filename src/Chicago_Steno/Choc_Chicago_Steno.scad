@@ -496,12 +496,14 @@ module keycap(
       #rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([-1,-5,KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
     }
 
-    // Tag / Version (negative version, could affect the top surface when thickness is small)
+    // Tag
     if(tag != ""){
-      tagheight = 0.15;
-      translate(BrimTranslation(0, keyID) + [0, 0, -2*$eps]) rotate(BrimRotation(0, keyID)) {
-          linear_extrude(height = tagheight+2*$eps)rotate([0, 180, 0])text( text = tag, font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      }
+      minHeight = 0.15;
+      tagheight = minHeight-0.025+$eps;  // @UNSURE Why 0.025 ??
+
+      // No rotation other than stem one because zone is always flat around the stems
+      // Create an extrusion from 0 to handle all special cases (fg: stem shorten by cap rotation)
+      rotate([0, 0, stemRot]) linear_extrude(height = tagheight+stemHeight, center=false) rotate([0, 180, 0])text( text = tag, font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
     }
 
     // Dish Shape
