@@ -359,6 +359,19 @@ function BrimTransform(t, keyID) =
 
 function BrimRadius(t, keyID) = pow(t/brimLayers,3)*3 + (1-pow(t/brimLayers, 3))*1;
 
+module BrimHull(keyID, stemRotation, fn) {
+  // Rotation will create a spiral path if lerp over the skinning
+  // Using hull we create the simplest possible shape without any weird distorsions
+  translate([0,0,-$eps]) hull() {
+    translate(BrimTranslation(0, keyID)) rotate([0, 0, stemRotation]) {
+      linear_extrude(height = 0.01*$eps, center = true) polygon(rounded_rectangle_profile(BrimTransform(0, keyID), r=BrimRadius(0, keyID), fn=fn));
+    }
+    translate(BrimTranslation(brimLayers, keyID)) rotate(BrimRotation(brimLayers, keyID)) {
+      linear_extrude(height = 0.01*$eps, center = true) polygon(rounded_rectangle_profile(BrimTransform(brimLayers, keyID), r=BrimRadius(brimLayers, keyID), fn=fn));
+    }
+  }
+}
+
 
 ///----- KEY Builder Module
 module keycap(
@@ -434,41 +447,21 @@ module keycap(
         layerAngle = maxAbsAngle > 0 ? slopeMaxZ / maxAbsAngle : 1.0;
 
         // Draw Brim (link cap and stem) if stem not already inside the cap thickness
-        if (innerTopToStemTop > 0.0){
-          if (stemRot == 0.0) {
-            if (BrimExponent(keyID) > 1) {
-              if (layerHeight < 0.01) {
-                echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Available height too small for good looking slope.");
-                echo_info(str("layerHeight: ", layerHeight));
-                adjustedSteps = [0, brimLayers];
-                translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
-              }
-              else if (layerAngle < 0.05) {
-                echo_warn("Brim extrusion set to linear to avoid a degenerated shape. Angle too step for available height.");
-                echo_info(str("layerAngle: ", layerAngle));
-                adjustedSteps = [0, brimLayers];
-                translate([0,0,-$eps]) skin([for (i=adjustedSteps) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
-              }
-              else {
-                translate([0,0,-$eps]) skin([for (i=[0:brimLayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
-              }
-            }
-            else {
-              translate([0,0,-$eps]) skin([for (i=[0:brimLayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
-            }
+        if (innerTopToStemTop > 0.0) {
+          if (stemRot != 0.0) {
+            echo_warn("Brim extrusion using Hull to avoid a spiral like shape due to stem rotation.");
+            BrimHull(keyID, stemRot, fn);
           }
-          else
-          {
-            // Rotation will create a spiral path if lerp over the skinning
-            // Using hull we create the simplest possible shape without any weird distorsions
-            translate([0,0,-$eps]) hull() {
-              translate(BrimTranslation(brimLayers, keyID)) rotate(BrimRotation(brimLayers, keyID)) {
-                linear_extrude(height = $eps, center = true) polygon(rounded_rectangle_profile(BrimTransform(brimLayers, keyID), r=BrimRadius(brimLayers, keyID), fn=fn));
-              }
-              translate(BrimTranslation(0, keyID)) rotate([0, 0, stemRot]) {
-                linear_extrude(height = $eps, center = true) polygon(rounded_rectangle_profile(BrimTransform(0, keyID), r=BrimRadius(0, keyID), fn=fn));
-              }
-            }
+          else if (layerHeight < 0.01) {
+            echo_warn("Brim extrusion using Hull to avoid a degenerated shape. Available height too small for good looking slope.");
+            BrimHull(keyID, stemRot, fn);
+          }
+          else if (layerAngle < 0.05) {
+            echo_warn("Brim extrusion using Hull to avoid a degenerated shape. Angle too step for available height.");
+            BrimHull(keyID, stemRot, fn);
+          }
+          else {
+            translate([0,0,-$eps]) skin([for (i=[0:brimLayers]) transform(translation(BrimTranslation(i, keyID)) * rotation(BrimRotation(i, keyID)), rounded_rectangle_profile(BrimTransform(i, keyID), r=BrimRadius(i, keyID), fn=fn))]);
           }
         }
 
