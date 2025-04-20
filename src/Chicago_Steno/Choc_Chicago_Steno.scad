@@ -22,12 +22,12 @@ $eps = 1/80;
 //
 // Testers
 //
-Xspacing = 18;
-Yspacing = 17;
+Xspacing = 19;
+Yspacing = 19;
 
 
-// translate([-Xspacing, -Yspacing, 0])rotate([0, 0, 0])keycap(
-//   keyID  = 25, //change profile refer to KeyParameters Struct
+// translate([-Xspacing, 0, 0])rotate([0, 0, 0])keycap(
+//   keyID  = 26, //change profile refer to KeyParameters Struct
 //   cutLen = 0, //Don't change. for chopped caps
 //   stem   = false, // Turn on inner shell, brim and stems
 //   stemRot = 0, //change stem orientation by deg
@@ -40,8 +40,8 @@ Yspacing = 17;
 //   verbose = false
 //   );
 
-// translate([-Xspacing, 0, 0])rotate([0, 0, 180])keycap(
-//   keyID  = 25, //change profile refer to KeyParameters Struct
+// translate([-Xspacing, Yspacing, 0])rotate([0, 0, 0])keycap(
+//   keyID  = 27, //change profile refer to KeyParameters Struct
 //   cutLen = 0, //Don't change. for chopped caps
 //   stem   = false, // Turn on inner shell, brim and stems
 //   stemRot = 0, //change stem orientation by deg
@@ -56,7 +56,7 @@ Yspacing = 17;
 // // translate([-Xspacing, 0, 10]) cube(size = [1, 1, 1], center = true);
 
 mirror([0, 0, 0])keycap(
-  keyID  = 25,  //change profile refer to KeyParameters Struct
+  keyID  = 21,  //change profile refer to KeyParameters Struct
   cutLen = 0,  //Don't change. for chopped caps
   stem   = true,  // Turn on inner shell, brim and stems
   stemRot = 0,  //change stem orientation by deg
@@ -70,8 +70,8 @@ mirror([0, 0, 0])keycap(
   verbose = true
 );
 
-// translate([0, -Yspacing, 0]) rotate([0, 0, 0]) keycap(
-//   keyID  = 25, //change profile refer to KeyParameters Struct
+// translate([0, Yspacing, 0]) rotate([0, 0, 0]) keycap(
+//   keyID  = 30, //change profile refer to KeyParameters Struct
 //   cutLen = 0, //Don't change. for chopped caps
 //   stem   = false, // Turn on inner shell, brim and stems
 //   stemRot = 0, //change stem orientation by deg
@@ -157,17 +157,20 @@ keyParameters = //keyParameters[KeyID][ParameterID]
     [17.20,  16.00,   5.6,     5,  4.6,     0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       1,     1], // Chicago Steno R3    Base
     // Last [21, 25]
     [17.20,  16.00,   5.6,     5,  5.0,     0,   .0,     5,     0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1,     3], // Chicago Steno R2/R4 Base
-    [17.20,  16.00,  4.25,  3.25,  6.8,   0.8,  0.6,     9,     8,    -0,   2, 2.5,    .10,      3,     .10,      2,     2,       1,     6], // Chicago Steno R2/R4 Outer
-    [17.20,  16.00,   5.6,     5,  5.5,     0,   .0,     7,     0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1,     3], // Chicago Steno R2/R4 Steep @TODO
     [17.20,  16.00,   5.6,     5,  4.6,     0,   .0,     0,     0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       1,     3], // Chicago Steno R3    Base
+    [17.20,  16.00,   5.6,     5,  5.5,     0,   .0,     7,     0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1,     3], // Chicago Steno R2/R4 Steep @TODO
+    [17.20,  16.00,  4.25,  3.25,  6.8,   0.8,  0.6,     9,     8,    -0,   2, 2.5,    .10,      3,     .10,      2,     2,       1,     6], // Chicago Steno R2/R4 Outer
     [17.20,  16.00,  4.25,  3.25,  6.2,  -0.4,  0.0,     0,     9,    -0,   2, 2.5,    .10,      3,     .10,      2,     2,       1,     7], // Chicago Steno R3    Outer
 
     //
     // MX spacing
     //
-    // Last [26, 27]
-    [18.00,  18.00,   6.1,     6.3,  5.0,   0,   .0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1,     9], // Chicago Steno R2/R4
-    [18.00,  18.00,   6.1,     6.3,  4.6,   0,   .0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       1,     9], // Chicago Steno R3 flat
+    // Last [26, 30]
+    [18.00,  18.00,   6.1,     6.3,  5.0,   0.0,  0.0,     5,    -0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1,     9], // Chicago Steno R2/R4 Base
+    [18.00,  18.00,   6.1,     6.3,  4.6,   0.0,  0.0,     0,    -0,    -0,   2, 2.5,    .10,      3,     .10,      3,     2,       1,     9], // Chicago Steno R3    Base
+    [18.00,  18.00,   6.1,     6.3,  6.5,   0.0,  0.0,     7,     0,    -0,   2, 2.5,    .10,      2,     .10,      3,     2,       1,     1], // Chicago Steno R2/R4 Steep
+    [18.00,  18.00,  4.65,     4.1,  6.8,   0.8,  0.6,     9,     8,    -0,   2, 2.5,    .10,      3,     .10,      2,     2,       1,     1], // Chicago Steno R2/R4 Outer
+    [18.00,  18.00,  4.65,     4.1,  6.2,   0.0,  0.0,     0,     9,    -0,   2, 2.5,    .10,      3,     .10,      2,     2,       1,     1], // Chicago Steno R3    Outer
 ];
 
 
@@ -226,18 +229,21 @@ dishParameters = //dishParameter[keyID][ParameterID]
     [ 7,  1.7,       4.5,  4.0,   5,  -40,  11.5,  15.0,  2,       4.5,  4.0,  5,  -40,  11.5,  15.0,  2], // Chicago Steno R3    Base
     // Last [21, 25]
     [ 7,  1.7,       4.6,  4.0,  10,  -45,  12.0,  17.5,  2,       4.6,  4.0,  5,  -30,  12.0,  17.0,  2], // Chicago Steno R2/R4 Base
-    [ 7,  1.7,       5.5,  4.0,  10,  -45,  15.0,  20.5,  2,       5.5,  4.0,  7,  -30,  15.0,  25.0,  2], // Chicago Steno R2/R4 Outer
-    [ 7,  1.7,       4.6,  4.0,   7,  -45,  12.0,  17.5,  2,       4.6,  4.0,  2,  -35,  12.0,  15.0,  2], // Chicago Steno R2/R4 Steep
     [ 7,  1.7,       4.6,  4.0,   7,  -45,  12.0,  17.0,  2,       4.6,  4.0,  7,  -45,  12.0,  17.0,  2], // Chicago Steno R3    Base
+    [ 7,  1.7,       4.6,  4.0,   7,  -45,  12.0,  17.5,  2,       4.6,  4.0,  2,  -35,  12.0,  15.0,  2], // Chicago Steno R2/R4 Steep
+    [ 7,  1.7,       5.5,  4.0,  10,  -45,  15.0,  20.5,  2,       5.5,  4.0,  7,  -30,  15.0,  25.0,  2], // Chicago Steno R2/R4 Outer
     [ 7,  1.7,       5.0,  4.0,   7,  -45,  16.0,  20.0,  2,       5.0,  4.0,  7,  -45,  16.0,  20.0,  2], // Chicago Steno R3    Outer
 
     //
     // MX spacing
     //
     // 1U
-    // Last [26, 27]
-    [ 8,  1.85,       4.8,  4.5,  10,  -45,  12.0,  17.5,  2,       4.8,  4.5,  5,  -30,  12.0,  17.0,  2], // Chicago Steno R2/R4
-    [ 8,  1.85,       4.8,  4.5,   7,  -45,  12.0,  17.0,  2,       4.8,  4.5,  7,  -45,  12.0,  17.0,  2], // Chicago Steno R3
+    // Last [26, 30]
+    [ 8,  1.85,       4.8,  4.5,  10,  -45,  12.0,  17.5,  2,       4.8,  4.5,  5,  -30,  12.0,  17.0,  2], // Chicago Steno R2/R4 Base
+    [ 8,  1.85,       4.8,  4.5,   7,  -45,  12.0,  17.0,  2,       4.8,  4.5,  7,  -45,  12.0,  17.0,  2], // Chicago Steno R3    Base
+    [ 8,  1.85,       4.8,  4.5,  10,  -45,  12.0,  17.5,  2,       4.8,  4.5,  5,  -30,  12.0,  17.0,  2], // Chicago Steno R2/R4 Steep
+    [ 8,  1.85,       5.5,  4.5,  10,  -45,  15.0,  20.5,  2,       5.5,  4.5,  7,  -30,  15.0,  25.0,  2], // Chicago Steno R2/R4 Outer
+    [ 8,  1.85,       5.0,  4.5,   7,  -45,  16.0,  20.0,  2,       5.0,  4.5,  7,  -45,  16.0,  20.0,  2], // Chicago Steno R3    Outer
 ];
 
 
